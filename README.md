@@ -27,6 +27,7 @@ Customizes the File Manager top bar title and right-side button.
 
 #### Features
 
+- **Hide top bar** — Removes the title bar entirely, giving the full screen height to the file list. The menu is still accessible by swiping down from the top edge.
 - **Folder name as title** — Replaces the static "KOReader" text with the name of the current folder. Folders marked as shortcuts show a ☆ prefix.
 - **Font styling** — Configurable font size, bold, and italic for the folder name. Hold the font size item to reset to default.
 - **Right button action** — Remaps the top-right button tap to any KOReader dispatcher action (toggle Wi-Fi, open search, switch night mode, etc.) instead of opening the plus menu.

@@ -4,6 +4,7 @@ Userpatch: Top Bar Editor
 Customizes the File Manager top bar.
 
 Features:
+  - Hide the top bar entirely (reclaims space for the file list)
   - Replace "KOReader" title with the current folder name
   - Configurable font size, bold, and italic styling for the folder name
   - Remap right button (plus) tap to any dispatcher action
@@ -28,6 +29,7 @@ local T = require("ffi/util").template
 -- Settings
 
 local S = {
+    hidden          = { key = "topbar_hidden",            default = false },
     folder_as_title = { key = "topbar_folder_as_title", default = true },
     font_size       = { key = "topbar_title_font_size", default = nil },
     bold            = { key = "topbar_title_bold",       default = false },
@@ -84,16 +86,28 @@ end
 local orig_FileManager_setupLayout = FileManager.setupLayout
 function FileManager:setupLayout()
     local do_folder_title = get(S.folder_as_title)
+    local hidden = get(S.hidden)
 
-    if do_folder_title then
+    if do_folder_title and not hidden then
         self._topbar_saved_title = self.title
         self.title = ""
     end
 
     orig_FileManager_setupLayout(self)
 
-    if do_folder_title then
+    if do_folder_title and not hidden then
         self.title = self._topbar_saved_title
+    end
+
+    if hidden then
+        local VerticalSpan = require("ui/widget/verticalspan")
+        local fc = self.file_chooser
+        fc.content_group[1] = VerticalSpan:new{ width = 0 }
+        fc.content_group:resetLayout()
+        fc.no_title = true
+        fc:_recalculateDimen()
+        fc:updateItems(1, false)
+        return
     end
 
     local needs_reinit = false
@@ -151,6 +165,7 @@ end
 
 local orig_FileManager_updateTitleBarPath = FileManager.updateTitleBarPath
 function FileManager:updateTitleBarPath(path)
+    if get(S.hidden) then return end
     if not get(S.folder_as_title) then
         return orig_FileManager_updateTitleBarPath(self, path)
     end
@@ -171,7 +186,7 @@ FileManager.onPathChanged = FileManager.updateTitleBarPath
 local orig_FileManager_onToggleSelectMode = FileManager.onToggleSelectMode
 function FileManager:onToggleSelectMode(do_refresh)
     orig_FileManager_onToggleSelectMode(self, do_refresh)
-    if not self.selected_files then
+    if not self.selected_files and not get(S.hidden) then
         local icon = get(S.right_icon)
         if icon then
             self.title_bar:setRightIcon(icon)
@@ -364,6 +379,16 @@ local function buildSettingsMenu()
     return {
         text = _("Top bar"),
         sub_item_table = {
+            {
+                text = _("Hide top bar"),
+                help_text = _("Hide the title bar in the file browser. Swipe down from the top of the screen to access the menu."),
+                checked_func = function() return get(S.hidden) end,
+                callback = function()
+                    set(S.hidden, not get(S.hidden))
+                    applyAndRefresh()
+                end,
+                separator = true,
+            },
             buildFolderNameMenu(),
             buildRightButtonMenu(),
             {
