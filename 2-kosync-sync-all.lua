@@ -17,7 +17,7 @@ Menu: Progress sync > Sync all progress from this device
 local userpatch = require("userpatch")
 local logger = require("logger")
 
-local tr = require("gettext")
+local _ = require("gettext")
 local T = require("ffi/util").template
 local Device = require("device")
 local ConfirmBox = require("ui/widget/confirmbox")
@@ -89,7 +89,7 @@ end
 local function syncAllProgressImpl(settings, device_id, service_spec, ensure_networking, interactive)
     if not settings or not settings.username or not settings.userkey then
         if interactive then
-            showInfo(tr("Please register or login before using the progress synchronization feature."), 3)
+            showInfo(_("Please register or login before using the progress synchronization feature."), 3)
         end
         return
     end
@@ -106,7 +106,7 @@ local function syncAllProgressImpl(settings, device_id, service_spec, ensure_net
         if not item or not item.file or not item.select_enabled then
             skipped_missing = skipped_missing + 1
             if item and item.file then
-                table.insert(skipped_entries, { file = item.file, reason = tr("Missing file") })
+                table.insert(skipped_entries, { file = item.file, reason = _("Missing file") })
             end
         elseif isQuickStartFile(item.file) then
             -- Always ignore the quickstart guide
@@ -138,15 +138,15 @@ local function syncAllProgressImpl(settings, device_id, service_spec, ensure_net
                         })
                     else
                         skipped_no_digest = skipped_no_digest + 1
-                        table.insert(skipped_entries, { file = item.file, reason = tr("Missing checksum") })
+                        table.insert(skipped_entries, { file = item.file, reason = _("Missing checksum") })
                     end
                 else
                     skipped_no_progress = skipped_no_progress + 1
-                    table.insert(skipped_entries, { file = item.file, reason = tr("No progress data") })
+                    table.insert(skipped_entries, { file = item.file, reason = _("No progress data") })
                 end
             else
                 skipped_no_progress = skipped_no_progress + 1
-                table.insert(skipped_entries, { file = item.file, reason = tr("No progress data") })
+                table.insert(skipped_entries, { file = item.file, reason = _("No progress data") })
             end
         end
     end
@@ -154,7 +154,7 @@ local function syncAllProgressImpl(settings, device_id, service_spec, ensure_net
     local skipped = skipped_missing + skipped_no_progress + skipped_no_digest
     if #queue == 0 then
         if interactive then
-            showInfo(tr("No progress data found to sync."), 3)
+            showInfo(_("No progress data found to sync."), 3)
         end
         return
     end
@@ -171,7 +171,7 @@ local function syncAllProgressImpl(settings, device_id, service_spec, ensure_net
                 UIManager:close(info)
             end
             if interactive then
-                showInfo(tr("KOSync client not available. Please restart KOReader."), 4)
+                showInfo(_("KOSync client not available. Please restart KOReader."), 4)
             end
             return
         end
@@ -184,7 +184,7 @@ local function syncAllProgressImpl(settings, device_id, service_spec, ensure_net
             if not interactive then
                 return
             end
-            local text = T(tr("Syncing progress: %1 / %2"), idx, #queue)
+            local text = T(_("Syncing progress: %1 / %2"), idx, #queue)
             if info then
                 UIManager:close(info)
             end
@@ -201,21 +201,21 @@ local function syncAllProgressImpl(settings, device_id, service_spec, ensure_net
             if not interactive then
                 return
             end
-            local summary = T(tr("Sync complete.\nPushed: %1\nFailed: %2\nSkipped: %3"),
+            local summary = T(_("Sync complete.\nPushed: %1\nFailed: %2\nSkipped: %3"),
                 pushed, failed, skipped)
             if failed > 0 or skipped > 0 then
                 UIManager:show(ConfirmBox:new{
                     text = summary,
-                    ok_text = tr("Details"),
-                    cancel_text = tr("Close"),
+                    ok_text = _("Details"),
+                    cancel_text = _("Close"),
                     ok_callback = function()
                         local lines = {}
                         if failed > 0 then
-                            table.insert(lines, tr("Failed:"))
+                            table.insert(lines, _("Failed:"))
                             for _, entry in ipairs(failures) do
                                 local _path, file_name = util.splitFilePathName(entry.file)
                                 local name = file_name or entry.file
-                                local err = entry.error or tr("Unknown error")
+                                local err = entry.error or _("Unknown error")
                                 table.insert(lines, "- " .. name .. ": " .. err)
                             end
                         end
@@ -223,11 +223,11 @@ local function syncAllProgressImpl(settings, device_id, service_spec, ensure_net
                             if #lines > 0 then
                                 table.insert(lines, "")
                             end
-                            table.insert(lines, tr("Skipped:"))
+                            table.insert(lines, _("Skipped:"))
                             for _, entry in ipairs(skipped_entries) do
                                 local _path, file_name = util.splitFilePathName(entry.file)
                                 local name = file_name or entry.file
-                                local reason = entry.reason or tr("Unknown reason")
+                                local reason = entry.reason or _("Unknown reason")
                                 table.insert(lines, "- " .. name .. ": " .. reason)
                             end
                         end
@@ -267,7 +267,7 @@ local function syncAllProgressImpl(settings, device_id, service_spec, ensure_net
                         pushed = pushed + 1
                     else
                         failed = failed + 1
-                        local message = body and body.message or (body and tostring(body)) or tr("Unknown error")
+                        local message = body and body.message or (body and tostring(body)) or _("Unknown error")
                         table.insert(failures, { file = entry.file, error = message })
                     end
                     pushNext()
@@ -319,7 +319,7 @@ local function patchKOSync(plugin)
             insert_index = 1
         end
         table.insert(sub, insert_index, {
-            text = tr("Sync all progress from this device"),
+            text = _("Sync all progress from this device"),
             enabled_func = function()
                 return self.settings and self.settings.userkey ~= nil
             end,

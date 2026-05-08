@@ -156,7 +156,7 @@ function FileManager:updateTitleBarPath(path)
     end
 
     local text = BD.directory(filemanagerutil.abbreviate(path))
-    if self.folder_shortcuts:hasFolderShortcut(path) then
+    if self.folder_shortcuts and self.folder_shortcuts:hasFolderShortcut(path) then
         text = "☆ " .. text
     end
     self.title_bar:setTitle(text)
@@ -303,7 +303,7 @@ local function buildActionSubItems()
             local entry = settingsList[k]
             if entry and entry[section_key] == true
                and entry.condition ~= false
-               and (entry.category == "none" or entry.category == "arg") then
+               and entry.category == "none" then
                 table.insert(section_items, {
                     text = entry.title,
                     checked_func = function() return get(S.right_action) == k end,

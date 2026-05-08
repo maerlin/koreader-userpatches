@@ -110,7 +110,6 @@ local function renderText(text_tpl, page, page_num)
     local total = tonumber(page_num) or 1
     local result = text_tpl
     result = result:gsub("{space}", " ")
-    result = result:gsub("{totalpages}", tostring(total))
     result = result:gsub("{remaining}", tostring(math.max(total - p, 0)))
     result = result:gsub("{pages}", tostring(total))
     result = result:gsub("{page}", tostring(p))
@@ -310,7 +309,13 @@ function Menu:init()
                     size.w = inner_w
                     return size
                 end
-                if alignment == "right" then
+                if alignment == "left" then
+                    self.page_info.paintTo = function(group, bb, x, y)
+                        group:resetLayout()
+                        group:getSize()
+                        orig_paintTo(group, bb, x, y)
+                    end
+                elseif alignment == "right" then
                     self.page_info.paintTo = function(group, bb, x, y)
                         group:resetLayout()
                         group:getSize()
