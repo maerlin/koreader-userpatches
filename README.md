@@ -4,7 +4,7 @@ A collection of [userpatches](https://github.com/koreader/koreader/wiki/User-pat
 
 ## Goal
 
-![Screenshot](screenshot.webp)
+<img src="screenshot.webp" alt="Screenshot" width="60%">
 
 I wanted to reach this UI without relying on full overhaul plugins like [ProjectTitle](https://github.com/hius07/koreader-projecttitle). Each patch here is small, scoped, and toggleable, so the rest of KOReader stays stock.
 
