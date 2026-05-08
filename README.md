@@ -2,6 +2,12 @@
 
 A collection of [userpatches](https://github.com/koreader/koreader/wiki/User-patches) for [KOReader](https://koreader.rocks/).
 
+## Goal
+
+![Screenshot](screenshot.webp)
+
+I wanted to reach this UI without relying on full overhaul plugins like [ProjectTitle](https://github.com/hius07/koreader-projecttitle). Each patch here is small, scoped, and toggleable, so the rest of KOReader stays stock.
+
 ## Installation
 
 1. Locate (or create) the `patches/` folder inside your KOReader data directory:
