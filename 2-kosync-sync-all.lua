@@ -102,7 +102,7 @@ local function syncAllProgressImpl(settings, device_id, service_spec, ensure_net
     local skipped_no_digest = 0
     local skipped_entries = {}
 
-    for _, item in ipairs(history) do
+    for _i, item in ipairs(history) do
         if not item or not item.file or not item.select_enabled then
             skipped_missing = skipped_missing + 1
             if item and item.file then
@@ -167,9 +167,6 @@ local function syncAllProgressImpl(settings, device_id, service_spec, ensure_net
         local info
         local KOSyncClient = getKOSyncClient()
         if not KOSyncClient then
-            if info then
-                UIManager:close(info)
-            end
             if interactive then
                 showInfo(_("KOSync client not available. Please restart KOReader."), 4)
             end
@@ -212,7 +209,7 @@ local function syncAllProgressImpl(settings, device_id, service_spec, ensure_net
                         local lines = {}
                         if failed > 0 then
                             table.insert(lines, _("Failed:"))
-                            for _, entry in ipairs(failures) do
+                            for _i, entry in ipairs(failures) do
                                 local _path, file_name = util.splitFilePathName(entry.file)
                                 local name = file_name or entry.file
                                 local err = entry.error or _("Unknown error")
@@ -224,7 +221,7 @@ local function syncAllProgressImpl(settings, device_id, service_spec, ensure_net
                                 table.insert(lines, "")
                             end
                             table.insert(lines, _("Skipped:"))
-                            for _, entry in ipairs(skipped_entries) do
+                            for _i, entry in ipairs(skipped_entries) do
                                 local _path, file_name = util.splitFilePathName(entry.file)
                                 local name = file_name or entry.file
                                 local reason = entry.reason or _("Unknown reason")

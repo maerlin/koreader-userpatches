@@ -564,9 +564,13 @@ local function buildSettingsMenu()
 end
 
 local function addToMenu(self, order)
+    self.menu_items.pagination_bar_settings = buildSettingsMenu()
+    -- order is module-cached; only insert once per session
+    for _, k in ipairs(order.setting) do
+        if k == "pagination_bar_settings" then return end
+    end
     table.insert(order.setting, "----------------------------")
     table.insert(order.setting, "pagination_bar_settings")
-    self.menu_items.pagination_bar_settings = buildSettingsMenu()
 end
 
 local orig_FM = FileManagerMenu.setUpdateItemTable

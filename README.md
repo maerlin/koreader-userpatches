@@ -102,6 +102,27 @@ A book is skipped (not counted as a failure) when:
 
 ---
 
+## Third-party patches
+
+The `third-party/` folder contains patches written by other authors that I use alongside my own. They're kept here only as a personal backup, in case of device loss or storage failure.
+
+I have applied small local modifications to some of them: bug fixes (crashes, nil dereferences, unbounded caches), tweaks to defaults, and minor feature additions for personal preference. **These changes are not intended to interfere with the original projects' development flow** — please report issues and contribute upstream.
+
+### Credits
+
+- **`2-navbar-vos.lua`** — Bottom navigation bar with configurable tabs.  
+  Original author: [SeriousHornet](https://github.com/SeriousHornet/KOReader.patches)
+
+- **`2-browser-folder-cover.lua`** — Folder covers in the mosaic/list file browser.  
+  **`2-browser-hide-underline.lua`** — Hides the "last visited" underline on covers.  
+  **`2-browser-up-folder.lua`** — Adds Up/Home folder navigation and hide-empty-folder option.  
+  **`2-screensaver-cover.lua`** — Extra options for the sleep screen.  
+  Original author: [sebdelsol](https://github.com/sebdelsol/KOReader.patches)
+
+If you are an author of one of these patches and would prefer this folder be removed, please open an issue and I will take it down.
+
+---
+
 ## Compatibility
 
 These patches are developed against recent stable KOReader releases and use the official userpatch API where possible. They rely on KOReader internals (widget APIs, dispatcher structure) that can change between releases. If KOReader updates its internals significantly, a patch may need to be updated.

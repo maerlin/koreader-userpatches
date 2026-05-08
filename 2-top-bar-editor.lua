@@ -88,15 +88,16 @@ function FileManager:setupLayout()
     local do_folder_title = get(S.folder_as_title)
     local hidden = get(S.hidden)
 
+    local saved_title
     if do_folder_title and not hidden then
-        self._topbar_saved_title = self.title
+        saved_title = self.title
         self.title = ""
     end
 
     orig_FileManager_setupLayout(self)
 
     if do_folder_title and not hidden then
-        self.title = self._topbar_saved_title
+        self.title = saved_title
     end
 
     if hidden then
@@ -407,9 +408,13 @@ local function buildSettingsMenu()
 end
 
 local function addToMenu(self, order)
+    self.menu_items.topbar_settings = buildSettingsMenu()
+    -- order is module-cached; only insert once per session
+    for _, k in ipairs(order.setting) do
+        if k == "topbar_settings" then return end
+    end
     table.insert(order.setting, "----------------------------")
     table.insert(order.setting, "topbar_settings")
-    self.menu_items.topbar_settings = buildSettingsMenu()
 end
 
 local orig_FM_setUpdateItemTable = FileManagerMenu.setUpdateItemTable
