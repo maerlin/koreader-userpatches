@@ -108,6 +108,32 @@ A book is skipped (not counted as a failure) when:
 
 ---
 
+### File Manager Navbar
+
+**File:** `2-filemanager-navbar.lua`  
+**Menu:** Settings → Navbar settings
+
+A bottom navigation bar with four fixed buttons: Prev page, Books (home), a configurable action, Next page.
+
+> **Credit:** This patch is a heavily trimmed fork of the original "navbar-vos" patch by [SeriousHornet](https://github.com/SeriousHornet/KOReader.patches). All credit for the original design and approach goes to the upstream author — this version strips out plugin integrations, color presets, custom tabs, and most config knobs in favor of a small four-button bar. The unmodified original is also kept in `third-party/2-navbar-vos.lua` for reference.
+
+#### Features
+
+- **Page navigation** — Prev/Next arrows act on the current file browser page.
+- **Books button** — Jumps to the configured home directory.
+- **Configurable action button** — Picks one of: OPDS, History, Favorites, Collections, Search, Settings. The icon and label update to match the selected action.
+- **Size** — Five presets: tiny, small, medium, large, huge.
+- **Toggles** — Show labels under icons, top border, top gap above the bar.
+- **Custom icons** — Each tab icon (Prev, Books, Next, and per-action) can be overridden via Navbar settings → Icons. Custom icon names are looked up first in `<KOReader data dir>/icons/` (drop any `.svg` or `.png` there), then fall back to KOReader's built-in icon set. Leaving an icon empty restores the default.
+
+#### Notes
+
+- Defaults rely on built-in KOReader icons (`chevron.left`, `home`, `chevron.right`, `appbar.search`, etc.), so the patch works out of the box.
+- The OPDS action handles both single-server jumps and the catalog picker, with correct HTTP auth (set via the browser instance, not `updateCatalog` args).
+- Only the file browser is affected; standalone views (history, collections, etc.) are not modified.
+
+---
+
 ## Third-party patches
 
 The `third-party/` folder contains patches written by other authors that I use alongside my own. They're kept here only as a personal backup, in case of device loss or storage failure.
@@ -116,7 +142,7 @@ I have applied small local modifications to some of them: bug fixes (crashes, ni
 
 ### Credits
 
-- **`2-navbar-vos.lua`** — Bottom navigation bar with configurable tabs.  
+- **`2-navbar-vos.lua`** — Bottom navigation bar with configurable tabs. Kept here as the unmodified reference for my trimmed fork (`2-filemanager-navbar.lua`).  
   Original author: [SeriousHornet](https://github.com/SeriousHornet/KOReader.patches)
 
 - **`2-browser-folder-cover.lua`** — Folder covers in the mosaic/list file browser.  
